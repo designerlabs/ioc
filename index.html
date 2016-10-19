@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>IOC</title>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--Import Google Icon Font-->
+    <link href="../plugins/google-font/opensans.css" rel="stylesheet">
+
+    
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="../plugins/bootstrap/dist/css/bootstrap-theme.min.css"  />
+    
+    <!--Custom stylesheet -->
+    <link rel="stylesheet" href="style/style.css" />
+
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="../plugins/jquery-2.1.1.min.js"></script>
+
+
+    <!-- Datepicker plugin : Moment.js -->
+    <script type="text/javascript" src="../plugins/moment/min/moment.min.js"></script>
+    
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="../plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+    <!-- Datepicker plugin : datepicker.js -->
+    <script type="text/javascript" src="../plugins/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="../plugins/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Datepicker plugin : datepicker.css  -->
+    <link rel="stylesheet" href="../plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.css" />
+    <!--AngularJS 1.5.8 -->
+    <script src="../plugins/angular/angular.min.js"></script>
+    
+    <script src="controllers/controller.js"></script>
+
+
+</head>
+
+<body>
+
+    <div class="container" ng-controller="AppCtrl">
+
+        
+        <div class="container" style="background:rgba(255,255,255,0.8); z-index:9; height:100%; position:absolute; top:0px;" ng-show="loading">
+            <div class="loader"></div>
+        </div>
+        <header>
+            <h1 class="maintitle">{{maintitle}}</h1>
+            <h4  class="subtitle">{{subtitle}}</h4>
+
+            <div class="logo"><img src="../img/mimos_logo.png" /></div>
+        </header>
+        
+
+        <section id="titleHeader" class="text-right">
+            <Button class="btn btn-md btn-default"  ng-click="showDiv = !showDiv"><i ng-class="showDiv ? 'fa fa-minus' : 'fa fa-plus'"></i></Button>
+        </section>
+
+        <form id="targetForm"  ng-show="showDiv" ng-submit="submit()" ><!-- novalidate -->
+        
+        <section id="targetChannelSection">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="messageId">Message ID</label>
+                        <input type="text" class="form-control" id="messageId" ng-model="formData.messageId" placeholder="yymmddnnnn" maxlength="10" ng-change="changedValue(formData.messageId, 'messageId')" pattern="[0-9]{10}" title="only numeric with 10 digits"  required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="originator">Originator</label>
+                        <select name="originator" class="form-control" id="originator" ng-change="changedValue(formData.originator, 'originator')" ng-options="item as item.type for item in originator track by item.id" ng-model="formData.originator"  required>
+                            <option value="">-- choose originator --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="eventId">Event ID</label>
+                        <input type="text" class="form-control" id="eventId" ng-model="formData.eventId" maxlength="10" ng-change="changedValue(formData.eventId, 'eventId')"  required>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="msgtype">Message Type</label>
+                        <select name="msgtype" id="msgtype" class="form-control" ng-options="item as item.type for item in messageTypes track by item.id" ng-model="formData.msgtype" ng-change="changedValue(formData.msgtype, 'msgtype')"  required>
+                            <option value="">-- choose message type --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="notifytype">Notification Type</label>
+                        <select name="notifytype" class="form-control" id="notifytype" ng-options="item as item.type for item in notificationTypes track by item.id" ng-model="formData.notifytype" ng-change="changedValue(formData.notifytype, 'notifytype')" required>
+                            <option value="">-- choose notification type --</option>
+                        </select>
+                    </div>
+                </div>
+
+                
+
+                <div class="col-sm-3 channelBg">
+                    <div class="form-group">
+                        <label for="targetchannel">Target Channels</label>
+                        <select name="targetchannel" class="form-control" id="targetchannel" ng-change="changedValue(formData.targetchannel,'targetchannel')" ng-options="item as item.type for item in targetChannels track by item.id" ng-model="formData.targetchannel" required>
+                            <option value="">-- choose notification type --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="locationInfoType">Location Info Types</label>
+                        <select name="locationInfoType" class="form-control" id="locationInfoType" ng-change="changedValue(formData.locationInfoType,'locationInfoType')"  ng-options="item as item.type for item in locationInfoType track by item.id" ng-model="formData.locationInfoType" required>
+                            <option value="">-- choose location info types --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="severitylevel">Severity levels</label>
+                        <select name="severitylevel" class="form-control" id="severitylevel" ng-change="changedValue(formData.severitylevel,'severitylevel')" ng-options="item as item.type for item in severitylevel track by item.id" ng-model="formData.severitylevel" required>
+                            <option value="">-- choose severity level --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="certaintylevel">Certainty levels ( *optional )</label>
+                        <select name="certaintylevel" class="form-control" id="certaintylevel" ng-change="changedValue(formData.certaintylevel,'certaintylevel')" ng-options="item as item.type for item in certaintylevel track by item.id" ng-model="formData.certaintylevel">
+                            <option value="">-- choose certainty level --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="targetdate">Target Date</label>
+                        <div class='input-group date'>
+                            <input type='text' class="form-control" id='datetimepicker1' ng-change="changedValue(formData.selecteddate,'selecteddate')" name="selecteddate" ng-model="formData.selecteddate" required/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="estimatedate">Estimated Start Date</label>
+                        <div class='input-group date'>
+                            <input type='text' class="form-control" id='datetimepicker2' ng-change="changedValue(formData.selectedestimateddate,'selectedestimateddate')" name="selectedestimateddate" ng-model="formData.selectedestimateddate" required/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <select name="state" class="form-control" id="state"  ng-options="option.stateId as option.stateName for option in getStateInfo" ng-model="getState" ng-change="getDistrict(getState)"  required>
+                            <option value="">-- choose state --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="district">District</label>
+                        <select name="district" class="form-control" id="district" ng-options="option.cityId as option.cityName for option in getDistrictInfo" ng-model="getDistric" ng-change="getImpactArea(getState, getDistric)"  required>
+                            <option value="">-- choose district --</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-sm-9">
+                    <code ng-show="impactedAreaVal">{{impactedAreaVal}}</code>
+                </div>
+                
+            </div>
+        </section>
+        <section class="container row successMsg" style="position:absolute; display:none;">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <h4 class="text-center"><strong><i class="fa fa-check-circle" aria-hidden="true"></i></strong> {{message}}.</h4>
+            </div>
+        </section>
+            
+        <section id="channelFormSection" style="display:none;">
+            <div class="row">
+                <div class="col-sm-6 nopadding">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="channelTypeTitle">Channel Type</label>
+                            <h4 ng-if="formData.targetchannel"><span ng-show="channelAdd">{{formData.targetchannel.type}}</span><span ng-show="channelEdit">{{selectedChannel}}</span></h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="targetusrgrp">Target User Groups</label>
+                            <select name="targetusrgrp" class="form-control" id="targetusrgrp" ng-change="changedValue(formData.targetusrgrp,'targetusrgrp')" ng-options="item as item.type for item in targetUsrGrp track by item.id" ng-model="formData.targetusrgrp" required>
+                                <option value="">-- choose target user group --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="messageformat">Message Format</label>
+                            <select name="messageformat" class="form-control" id="messageformat" ng-options="item as item.type for item in messageFormat track by item.id" ng-change="changedValue(formData.messageformat,'messageformat')" ng-model="formData.messageformat" required>
+                                <option value="">-- choose message format --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="messagetemplate">Message Template</label>
+                            <select name="messagetemplate" class="form-control" id="messagetemplate" ng-change="changedValue(formData.messagetemplate,'messagetemplate')"  ng-options="item as item.type for item in messageTemplate track by item.id" ng-model="formData.messagetemplate" required>
+                                <option value="">-- choose message template --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 nopadding">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="txtcomment">Message</label>
+                            <textarea name="txtcomment" id="txtcomment"  ng-change="changedValue(formData.txtcomment,'txtcomment')" class="form-control" cols="30" rows="5" ng-model="formData.txtcomment" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+             
+                
+                
+               
+            </div>
+            <div class="text-right">
+                <button ng-show="updatebtn" class="btn btn-md btn-default" type="button" ng-click="action.update();"><i class="fa fa-refresh" aria-hidden="true"></i> Update</button>
+                <button ng-show="newbtn" class="btn btn-md btn-default" type="button" ng-click="action.new();"><i class="fa fa-check"></i> New</button>
+                <button ng-show="addbtn" class="btn btn-md btn-default" type="submit"><i class="fa fa-plus"></i> Add</button>
+            </div>
+           
+        </section>
+        </form>
+        <section id="outputTableSection" class="table-responsive">
+            <table class="table ">
+              
+                    <tr>
+                        <th width="5%">#</th>
+                        <th  width="10%">Channel Type</th>
+                        <th  width="15%">Target User Groups</th>
+                        <th  width="15%">Message Format</th>
+                        <th  width="15%">Message Template</th>
+                        <th  width="20%">Message</th>
+
+                        <th width="15%">Action</th>
+                    </th>
+              
+                    <tr ng-repeat="formData in getFormData" ng-class="{selected: formData.targetchannel.type === idSelectedRow}">
+                       
+                        <td>{{$index + 1}}</td>
+                        <td>{{formData.targetchannel.type}}</td>
+                        <td>{{formData.targetusrgrp.type}}</td>
+                        <td>{{formData.messageformat.type}}</td>
+                        <td>{{formData.messagetemplate.type}}</td>
+                        <td>{{formData.txtcomment}}</td>
+                        <td><button  ng-click="action.edit(formData.targetchannel.type, $index)" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i> <span class="visible-lg-inline">Edit</span></button> <button ng-click="action.predelete($index)" class="btn btn-sm btn-danger"><i class="fa fa-times"></i> <span class="visible-lg-inline">Delete</span></button></td>
+                        
+                    </tr>
+                    <tr ng-show="!getFormData.length">
+                        <td colspan="7" class="text-danger"><h4 class="text-center"><i class="fa fa-warning"></i> Record not found!</h4></td>
+                     </tr>
+            </table>
+             <div class="text-right submitBtn" ng-if="getFormData.length">
+                <button ng-click="action.submit();" class="btn btn-md btn-default"><i class="fa fa-share" aria-hidden="true"></i> Submit</button>
+            </div>
+        </section>
+        
+
+        <!-- Delete confirmation -->
+
+        <div class="modal fade" id="confirmationMsg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel"><i class="fa fa-warning"></i> Confirmation Message</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <h3>Are you sure?</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" ng-click="action.delete($index)">Delete</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

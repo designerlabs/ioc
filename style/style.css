@@ -1,0 +1,105 @@
+body{
+    font-family: 'Open Sans', sans-serif !important;
+    margin:10px 10px !important;
+}
+
+header{
+    padding: 17px 10px;
+    background: #f7e9f4;
+    margin-bottom: 8px;
+    height: 80px;
+    border: 1px solid #f7baee;
+}
+
+.logo{
+    display: inline;
+    float: right;
+}
+
+.logo img{
+    bottom: 8px;
+    position: relative
+}
+
+header .maintitle, header .subtitle{
+    display:inline;
+    color: #9a0785;
+}
+
+header .maintitle{
+    font-weight: bold;
+}
+
+.targetChannelLabel{
+    top: 8px;
+}
+
+
+#targetChannelSection{
+    padding: 10px;
+    background: #fff;
+    color: #8f1c7e;
+    border: 1px dotted #8f1c7e;
+}
+
+#channelFormSection{
+    padding: 10px;
+    margin-top: 10px;
+    background: #f3f3f3;
+    border: 1px solid #deb4d9;
+}
+
+#outputTableSection{
+    background: #fff;
+    margin-top: 10px;
+    border: 1px solid #deb4d9;
+}
+
+#outputTableSection .submitBtn{
+    padding: 10px;
+}
+
+#outputTableSection table >tbody > tr:first-child{
+    background: #c172b6;
+    color: #fff;
+}
+
+#titleHeader{
+    padding:10px;
+    background: #c172b6;
+}
+
+.nopadding{
+    padding:0px !important;
+}
+
+
+#txtcomment{
+    height: 107px !important;
+    width: 100% !important;
+}
+
+.selected{
+    background: #e0d6df;
+}
+
+.channelBg{
+    background: #f7e8f5;
+}
+
+/** loader **/
+
+.loader {
+        border: 5px solid #8f1c7e;
+    border-top: 5px solid #ead2e7;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin: 20% auto;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
